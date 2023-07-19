@@ -1,0 +1,10 @@
+syntax = "proto3";
+package main;
+
+
+option go_package = "./sectorpb";
+
+message Sector {
+    string ticker = 1;
+    string sector = 2;
+}
