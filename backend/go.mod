@@ -1,4 +1,4 @@
-module github.com/nectariosouzou/portfolio-viewer
+module github.com/nectariosouzou/portfolio-viewer/backend
 
 go 1.20
 
