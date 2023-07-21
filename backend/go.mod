@@ -7,5 +7,4 @@ require (
 	github.com/redis/rueidis v1.0.12
 	github.com/rs/cors v1.9.0
 	github.com/sashabaranov/go-openai v1.14.0
-	google.golang.org/protobuf v1.31.0
 )

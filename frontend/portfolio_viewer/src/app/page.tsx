@@ -91,7 +91,7 @@ const Home = () => {
     try {
       const formData = new FormData();
       formData.append('file', selectedFile);
-      const response = await fetch('http://127.0.0.1:5050/portfolio', {
+      const response = await fetch('http://localhost:8080/portfolio', {
         method: 'POST',
         body: formData,
       });

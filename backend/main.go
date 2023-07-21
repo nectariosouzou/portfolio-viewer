@@ -24,6 +24,7 @@ type RequestData struct {
 
 func main() {
 	db = InitDb()
+	InitEnv()
 	c := make(chan os.Signal, 1)
 	signal.Notify(c, os.Interrupt)
 	go func() {
@@ -65,7 +66,7 @@ func main() {
 			return
 		}
 	})
-	port := ":5050"
+	port := ":8080"
 	fmt.Println("Server is running on port" + port)
 	// Start server on port specified above
 	log.Fatal(http.ListenAndServe(port, wrappedHandler))
