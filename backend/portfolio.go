@@ -46,8 +46,7 @@ func calculatePortfolio(stocks []Stock, sectors map[string]string) *PortfolioVal
 func sortStocks(stocks []Stock) (map[string]string, error) {
 	tickers := make(map[string]bool, len(stocks))
 	var tickersForGPT []string
-	sectors := map[string]string{}
-	sectors2 := map[string]string{}
+	var sectors map[string]string
 	for _, stock := range stocks {
 		tickers[stock.Ticker] = false
 	}
@@ -56,22 +55,22 @@ func sortStocks(stocks []Stock) (map[string]string, error) {
 		return nil, err
 	}
 	for key, ticker := range tickers {
-		if ticker == false {
+		if !ticker {
 			tickersForGPT = append(tickersForGPT, key)
 		}
 	}
 	if len(tickersForGPT) > 0 {
-		sectors2, err = findSectors(tickersForGPT)
+		sectorsGPT, err := findSectors(tickersForGPT)
 		if err != nil {
 			return nil, err
 		}
-		err = db.SetTicker(sectors2)
+		err = db.SetTicker(sectors)
 		if err != nil {
 			return nil, err
 		}
+		for key, sector := range sectorsGPT {
+			sectors[key] = sector
+		}
 	}
-	for key, sector := range sectors {
-		sectors2[key] = sector
-	}
-	return sectors2, nil
+	return sectors, nil
 }
