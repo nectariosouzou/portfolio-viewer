@@ -1,18 +1,28 @@
-.all{
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+.head {
+  background-color: #F5F5F5;
+  color: #1E90FF;
+  min-height: 25vh;
+  text-align: center;
+  position: relative;
+  padding: 20px;
+  font-size: 2em;
+  font-weight: bold;
+  box-shadow: 0 6px 5px #1e8fff64;
 }
-.body{
-  background-color: rgb(63,72,83);
+
+.main1 {
+  min-height: 75vh;
+  background-color: #778899;
   font-family: sans-serif;
-  color: rgb(220,220,220);
-  padding: 50px;
-  width: 100vw;
-  overflow-x: hidden;
+  margin: 0px;
+  padding: 10px;
+  overflow: auto;
 }
 .h1{
   font-weight: 400;
+  color: #F5F5F5;
+  padding: 5px;
+  padding-bottom: 0px;
 }
 .a{
   color: inherit;
@@ -30,49 +40,35 @@
   padding: 2px;
 }
 
-._rank{
-  min-width: 80px;
-}
-._id{
-  min-width: 60px;
-}
 ._name{
   min-width: 300px;
-}
-._surname{
-  min-width: 130px;
 }
 ._value{
   min-width: 80px;
 }
+
 .section{
   display: flex;
   justify-content: center;
   align-items: center
 }
 
-.pre{
-  overflow: auto;
-}
-
 /** Sticky table styles **/
 .st_viewport{
-  background-color: rgb(62,148,236);
-  color: rgb(27,30,36);
-  margin: 20px 0;
+  background-color: #3e4751;
+  margin: 25px 0;
 }
-/* ###  Table wrap */
-.st_wrap_table{
-  
-}
+
 /* ##   header */
 .st_table_header{
   position: -webkit-sticky;
   position: sticky;
   top: 0px;
+  padding: 0px;
+  padding-bottom: 0px;
   z-index: 1;
-  background-color: rgb(27,30,36);
-  color: rgb(220,220,220);
+  background-color: #54616d;
+  color: #F5F5F5
 }
 .st_table_header h2{
   font-weight: 400;
@@ -80,11 +76,10 @@
   padding: 20px 0 0;
 }
 .st_table_header .st_row{
-  color: rgba(220,220,220, .7);
+  color: #F5F5F5;
+  border-bottom: 3px solid rgb(39, 39, 39) ;
 }
-.st_table_header .st_column{
-  
-}
+
 /* ##  table */
 .st_table{
   display: -webkit-box;
@@ -104,6 +99,7 @@
   display: -ms-flexbox;
   display: flex;
   margin: 0;
+  padding: 3px;
 }
 .st_table .st_row:nth-child(even){
   background-color: rgba(0,0,0, .1)

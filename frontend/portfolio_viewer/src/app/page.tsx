@@ -73,7 +73,6 @@ var responseData: Portfolio = {
   TotalValue: 0,
   Sectors: [],
   SectorPercentage: {},
-
 }
 
 const Home = () => {
@@ -115,23 +114,24 @@ const Home = () => {
     }
   };
   return (
-    <>
+    <div>
       <div>
-        <h1>Portfolio</h1>
-        <input type="file" onChange={handleFileChange} />
-        <button onClick={handleFileUpload} disabled={!selectedFile}>Submit</button>
-      </div>
-      {/* Doughnut chart */}
-      <h1 className="w-[150px] mx-auto mt-10 text-xl font-semibold capitalize "></h1>
-      <div className="w-[1100px] h-screen flex mx-auto my-auto">
-          <div className='border border-gray-400 pt-0 rounded-xl w-full h-fit my-auto  shadow-xl pb-2'>
+        <div className={styles.head}>
+          <h1>Portfolio</h1>
+          <input type="file" onChange={handleFileChange} />
+          <button onClick={handleFileUpload} disabled={!selectedFile}>Submit</button>
+        </div>
+        {/* Doughnut chart */}
+        <div className={styles.main1}>
+          <div>
               <canvas id='myChart' height="600px"></canvas>
           </div>
           <div key="table" className={styles.section}>
-          <TableRows Sectors={sectors} TotalValue={0} SectorPercentage={{}}/>
+            <TableRows Sectors={sectors} TotalValue={0} SectorPercentage={{}}/>
           </div>
+        </div>
       </div>
-    </>
+    </div>
   )
 }
 
@@ -162,8 +162,14 @@ function DoughnutChart(data: number[]) {
               font: {
                 style: "oblique",
               },
+              color: 'white',
+              padding: 10,
             },
-            position: "left",
+            labels: {
+              color: 'white',
+              padding: 10,
+            },
+            position: "bottom",
           },
           tooltip: {
               callbacks: {
@@ -201,16 +207,25 @@ function UnpackColors(dictionary: Dictionary<string>) {
   return list
 }
 
+const formatter = new Intl.NumberFormat('en-US', {
+  style: 'currency',
+  currency: 'USD',
 
-export default Home;
+  // These options are needed to round to whole numbers if that's what you want.
+  //minimumFractionDigits: 0, // (this suffices for whole numbers, but will print 2500.10 as $2,500.1)
+  //maximumFractionDigits: 0, // (causes 2500.99 to be printed as $2,501)
+});
 
 const TableRows: React.FC<Portfolio> = ({ Sectors }) => {
+  if (Sectors.length == 0) {
+    return null
+  }
   return (
     <div className={styles.st_viewport}>
         {Sectors.map((sector, index) => (
           <div className={styles.st_wrap_table} key={index}>
             <header className={styles.st_table_header}>
-              <h1>{sector.Sector}</h1>
+              <h1 className={styles.h1}>{sector.Sector}</h1>
               <div className={styles.st_row} >
                 <div className={styles._name}>Name </div>
                 <div className={styles._value}>Value</div>
@@ -231,9 +246,11 @@ const TableRow: React.FC<{ sector: Sector }> = ({ sector }) => {
         {sector.Stocks.map((stock, index) => (
           <div className={styles.st_row} style={{'background':COLORS[sector.Sector]}} key={index}>
             <div className={styles._name}>{stock.Name.slice(0,30)}</div>
-            <div className={styles._value}>{stock.Value}</div>
+            <div className={styles._value}>{formatter.format(stock.Value)}</div>
           </div>
         ))}
     </div>
   );
 };
+
+export default Home;
