@@ -1,11 +1,15 @@
-build-backend:
-	docker build -t redis-news-image .
-	docker run -d -p 6379:6379 --name redis-news redis-news-image
+run-app:
+	docker-compose up --force-recreate --build server
 
-run-backend:
-	docker start redis-news
-	go build
-	./backend
+build-backend:
+	docker-compose up --force-recreate --build server
 
 stop-backend:
-	docker stop redis-news
+	docker-compose down || true
+
+clean:
+	make stop-backend
+	docker image rm -f redis:alpine
+	docker image rm -f backend-server
+
+
