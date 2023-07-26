@@ -64,7 +64,7 @@ func sortStocks(stocks []Stock) (map[string]string, error) {
 		if err != nil {
 			return nil, err
 		}
-		err = db.SetTicker(sectors)
+		err = db.SetTicker(sectorsGPT)
 		if err != nil {
 			return nil, err
 		}
