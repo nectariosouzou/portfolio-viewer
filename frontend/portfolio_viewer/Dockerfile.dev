@@ -1,0 +1,29 @@
+# Stage 1: Build the development environment
+FROM node:20-alpine AS build
+# Set the working directory inside the container
+WORKDIR /app
+
+# Copy package.json and package-lock.json to the container
+COPY package.json package-lock.json ./
+
+# Install dependencies for development
+RUN npm install
+
+# Copy the rest of the application code to the container
+COPY . .
+RUN ls -a
+
+# Stage 2: Create the dev environment
+FROM node:20-alpine AS development
+# Set the working directory inside the container
+WORKDIR /app
+COPY --from=build /app/public ./public
+COPY --from=build /app/src/app ./src/app
+COPY --from=build /app/node_modules ./node_modules
+COPY --from=build /app/package.json ./
+
+# Expose the default Next.js dev server port
+EXPOSE 3000
+
+# Set the command to start the Next.js production server
+CMD ["npm", "run", "dev"]

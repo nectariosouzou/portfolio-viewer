@@ -2,8 +2,8 @@ package main
 
 import (
 	"log"
+	"os"
 
-	"github.com/joho/godotenv"
 	"github.com/redis/rueidis"
 )
 
@@ -14,9 +14,8 @@ type DbClients struct {
 }
 
 func InitDbClients() *DbClients {
-	Env = loadEnv()
 	return &DbClients{
-		RedisClient: NewRedisClient([]string{Env["REDIS_ADDR"]}),
+		RedisClient: NewRedisClient([]string{os.Getenv("REDIS_ADDR")}),
 	}
 }
 
@@ -28,12 +27,8 @@ func NewRedisClient(addr []string) rueidis.Client {
 	return client
 }
 
-func loadEnv() map[string]string {
-	var envs map[string]string
-	envs, err := godotenv.Read(".env")
-
-	if err != nil {
-		log.Fatalf("Error loading .env file")
-	}
-	return envs
+func InitEnv() {
+	Env = make(map[string]string)
+	Env["REDIS_ADDR"] = os.Getenv("REDIS_ADDR")
+	Env["API_KEY"] = os.Getenv("API_KEY")
 }

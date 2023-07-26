@@ -1,11 +1,20 @@
-FROM redis:latest
+# Use the official Go image from the Docker Hub
+FROM golang:1.21-rc-alpine
 
-# Set the desired port
-EXPOSE 6379
+# Set the current working directory inside the container
+WORKDIR /app
 
-# Set the IP address to listen on
-ENV REDIS_BIND 0.0.0.0
+# Copy the Go Mod and Sum files
+COPY go.mod go.sum ./
 
-# Start Redis with custom configuration
-CMD ["redis-server", "--port", "6379", "--bind", "0.0.0.0"]
+# Download all dependencies.
+RUN go mod download
 
+# Copy the source from the current directory to the working directory inside the container
+COPY . .
+
+# Build the Go app
+RUN go build -o main .
+
+# Command to run the executable
+CMD ["./main"]
