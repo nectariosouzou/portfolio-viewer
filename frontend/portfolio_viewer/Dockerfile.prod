@@ -1,32 +1,39 @@
-# Stage 1: Install dependencies
-FROM node:20-alpine AS deps
-# Set the working directory inside the container
-WORKDIR /app
-# Copy package.json and package-lock.json to the container
-COPY package.json package-lock.json ./
+# ---- Build Stage ----
+FROM node:20-alpine AS builder
 
+# Set the working directory
+WORKDIR /app
+
+# Copy package.json and package-lock.json
+COPY package*.json ./
+
+# Install dependencies
 RUN npm install
 
-# Stage 2: build
-FROM node:20-alpine AS build
-# Set the working directory inside the container
-WORKDIR /app
-COPY --from=deps /app/node_modules ./node_modules
-COPY src ./src
-COPY public ./public
-COPY package.json next.config.js tsconfig.json ./
-# Run the next build process and generate the artifacts
+# Copy the rest of the code
+COPY . ./
+
+# Build the production-ready code
 RUN npm run build
 
-
+# ---- Production Stage ----
 FROM node:20-alpine
-COPY --from=build /app/public ./public
-COPY --from=build /app/src/app ./src/app
-COPY --from=build /app/node_modules ./node_modules
-COPY --from=build /app/package.json ./
 
-# Expose the default Next.js dev server port
+# Set the working directory
+WORKDIR /app
+
+# Copy only the built artifacts and necessary files from the builder stage
+COPY --from=builder /app/.next ./.next
+COPY --from=builder /app/package*.json ./
+COPY --from=builder /app/public ./public
+COPY --from=builder /app/next.config.js ./next.config.js
+
+# Install only production dependencies
+RUN npm install --only=production
+
+# Expose the port
 EXPOSE 3000
 
-# Set the command to start the Next.js production server
-CMD ["npm", "run", "start"]
+# Start the Next.js app
+CMD ["npm", "start"]
+
