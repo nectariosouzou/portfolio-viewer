@@ -21,7 +21,7 @@ COPY --from=build /app/public ./public
 COPY --from=build /app/src/app ./src/app
 COPY --from=build /app/node_modules ./node_modules
 COPY --from=build /app/package.json ./
-
+ENV NEXT_PUBLIC_BACKEND_URL=http://127.0.0.1:8080
 # Expose the default Next.js dev server port
 EXPOSE 3000
 
