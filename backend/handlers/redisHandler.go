@@ -1,4 +1,4 @@
-package main
+package handlers
 
 import (
 	"context"
@@ -7,18 +7,28 @@ import (
 	"github.com/redis/rueidis"
 )
 
+type RedisHandler struct {
+	redisClient rueidis.Client
+}
+
 type Sector struct {
 	Tickers []string
 }
 
-func (r *DbClients) findSectors(tickers map[string]bool) (map[string]string, error) {
+func InitRedisHandler(client rueidis.Client) RedisHandler {
+	return RedisHandler{
+		redisClient: client,
+	}
+}
+
+func (r *RedisHandler) FindSectors(tickers map[string]bool) (map[string]string, error) {
 	ctx := context.Background()
 	cmds := make(rueidis.Commands, 0, len(tickers))
 	for key := range tickers {
-		cmds = append(cmds, r.RedisClient.B().Hgetall().Key(key).Build())
+		cmds = append(cmds, r.redisClient.B().Hgetall().Key(key).Build())
 	}
 	sectors := map[string]string{}
-	for _, resp := range r.RedisClient.DoMulti(ctx, cmds...) {
+	for _, resp := range r.redisClient.DoMulti(ctx, cmds...) {
 		if err := resp.Error(); err != nil {
 			fmt.Printf("redis error: %s", err)
 			return nil, err
@@ -33,13 +43,13 @@ func (r *DbClients) findSectors(tickers map[string]bool) (map[string]string, err
 	return sectors, nil
 }
 
-func (r *DbClients) SetTicker(tickers map[string]string) error {
+func (r *RedisHandler) SetTicker(tickers map[string]string) error {
 	ctx := context.Background()
 	cmds := make(rueidis.Commands, 0, len(tickers))
 	for key, value := range tickers {
-		cmds = append(cmds, r.RedisClient.B().Hset().Key(key).FieldValue().FieldValue("Ticker", key).FieldValue("Sector", value).Build())
+		cmds = append(cmds, r.redisClient.B().Hset().Key(key).FieldValue().FieldValue("Ticker", key).FieldValue("Sector", value).Build())
 	}
-	for _, resp := range r.RedisClient.DoMulti(ctx, cmds...) {
+	for _, resp := range r.redisClient.DoMulti(ctx, cmds...) {
 		if err := resp.Error(); err != nil {
 			fmt.Printf("redis error: %s", err)
 			return err
