@@ -1,4 +1,4 @@
-package main
+package handlers
 
 import (
 	"context"
@@ -6,8 +6,11 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/nectariosouzou/portfolio-viewer/backend/infra"
 	openai "github.com/sashabaranov/go-openai"
 )
+
+type GptHandler struct{}
 
 type GptSector struct {
 	Sector string `json:"Sector"`
@@ -35,9 +38,9 @@ func message(tickers []string) string {
 	return str
 }
 
-func findSectors(tickers []string) (map[string]string, error) {
+func (g *GptHandler) FindSectors(tickers []string) (map[string]string, error) {
 	str := message(tickers)
-	client := openai.NewClient(Env["API_KEY"])
+	client := openai.NewClient(infra.Env["API_KEY"])
 	resp, err := client.CreateChatCompletion(
 		context.Background(),
 		openai.ChatCompletionRequest{
