@@ -26,8 +26,8 @@ type PortfolioValue struct {
 	Sectors          []SectorInfo
 }
 
-func InitApi(dbs *infra.DbClients) Api {
-	return Api{
+func InitApi(dbs *infra.DbClients) *Api {
+	return &Api{
 		RedisHandler: handlers.InitRedisHandler(dbs.RedisClient),
 	}
 }
@@ -71,7 +71,7 @@ func (a *Api) sortStocks(stocks []Stock) (map[string]string, error) {
 	for _, stock := range stocks {
 		tickers[stock.Ticker] = false
 	}
-	sectors, err := a.RedisHandler.FindSectors(tickers)
+	sectors, tickers, err := a.RedisHandler.FindSectors(tickers)
 	if err != nil {
 		return nil, err
 	}
