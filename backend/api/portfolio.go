@@ -3,6 +3,7 @@ package api
 import (
 	"encoding/json"
 	"fmt"
+	"log"
 	"net/http"
 
 	"github.com/nectariosouzou/portfolio-viewer/backend/handlers"
@@ -87,7 +88,8 @@ func (a *Api) sortStocks(stocks []Stock) (map[string]string, error) {
 		}
 		err = a.RedisHandler.SetTicker(sectorsGPT)
 		if err != nil {
-			return nil, err
+			//Don't fail. Report, new tickers won't be added to cache. TODO: Maybe log to file.
+			log.Print(err)
 		}
 		for key, sector := range sectorsGPT {
 			sectors[key] = sector
