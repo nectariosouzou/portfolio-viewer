@@ -26,7 +26,7 @@ jobs:
       run: cd backend && go build ./cmd/server/main.go
   
     - name: Test
-      run: cd backend && go test -v
+      run: cd backend && go test -v ./...
 
   golangci:
     name: lint
